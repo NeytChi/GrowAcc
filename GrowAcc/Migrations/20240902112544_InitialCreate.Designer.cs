@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrowAcc.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240902080031_InitialCreate")]
+    [Migration("20240902112544_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -52,7 +52,7 @@ namespace GrowAcc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("YourModels");
+                    b.ToTable("UserAccounts");
                 });
 #pragma warning restore 612, 618
         }

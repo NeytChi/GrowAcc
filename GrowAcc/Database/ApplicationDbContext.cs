@@ -8,7 +8,5 @@ public class ApplicationDbContext : DbContext
     {
 
     }
-
-    // Додайте DbSet'и для ваших моделей
-    public DbSet<UserAccount> YourModels { get; set; }
+    public DbSet<UserAccount> UserAccounts { get; set; }
 }

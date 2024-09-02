@@ -49,7 +49,7 @@ namespace GrowAcc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("YourModels");
+                    b.ToTable("UserAccounts");
                 });
 #pragma warning restore 612, 618
         }

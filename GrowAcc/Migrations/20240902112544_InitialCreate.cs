@@ -12,7 +12,7 @@ namespace GrowAcc.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "YourModels",
+                name: "UserAccounts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -24,7 +24,7 @@ namespace GrowAcc.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_YourModels", x => x.Id);
+                    table.PrimaryKey("PK_UserAccounts", x => x.Id);
                 });
         }
 
@@ -32,7 +32,7 @@ namespace GrowAcc.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "YourModels");
+                name: "UserAccounts");
         }
     }
 }
