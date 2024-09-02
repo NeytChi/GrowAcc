@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GrowAcc.RequestCommands;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrowAcc.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -13,20 +14,14 @@ namespace GrowAcc.Controllers
         {
             _context = context;
         }
-
-        public bool Registration()
+        [HttpPost]
+        public IActionResult Registration([FromBody] UserAccountRegistrationCommand command)
         {
-            return true;
-
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Повертаємо помилки валідації
+            }
+            return Ok("User created successfully.");
         }
-        public ActionResult Login()
-        {
-            return null;
-        }
-        public ActionResult Logout()
-        {
-            return null;
-        }
-
     }
 }
