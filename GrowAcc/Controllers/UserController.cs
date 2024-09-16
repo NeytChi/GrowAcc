@@ -1,5 +1,6 @@
-﻿using GrowAcc.RequestCommands;
-using Microsoft.AspNetCore.Http;
+﻿using GrowAcc.BusinessFlow;
+using GrowAcc.Database;
+using GrowAcc.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrowAcc.Controllers
@@ -8,20 +9,22 @@ namespace GrowAcc.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserController(ApplicationDbContext context) 
+        private UserAccountService _userService;
+        private readonly IUserRepository _userRepository;
+        public UserController(UserAccountService userAccountService, IUserRepository repository) 
         {
-            _context = context;
+            _userService = userAccountService;
+            _userRepository = repository;
         }
         [HttpPost]
-        public IActionResult Registration([FromBody] UserAccountRegistrationCommand command)
+        public IActionResult Registration([FromBody] UserAccountRegistrationRequest request)
         {
-            if (!ModelState.IsValid)
+            var result = _userService.Registration(request);
+            if (result.IsCompleted)
             {
-                return BadRequest(ModelState); // Повертаємо помилки валідації
+                return Ok("User created successfully.");
             }
-            return Ok("User created successfully.");
+            return BadRequest(ModelState);
         }
     }
 }

@@ -1,4 +1,6 @@
 using FluentValidation.AspNetCore;
+using GrowAcc.BusinessFlow.Smtp;
+using GrowAcc.Database;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddControllers()
     .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpConfiguration"));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISmtpSender, SmtpSender>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -6,7 +6,8 @@ namespace GrowAcc.Database
     {
         public UserAccount Create(UserAccount account);
         public void Update(UserAccount account);
-        public void Delete(Guid id);
+        public void Delete(UserAccount account);
         public UserAccount Get(Guid id);
+        public UserAccount Get(string email);
     }
 }
