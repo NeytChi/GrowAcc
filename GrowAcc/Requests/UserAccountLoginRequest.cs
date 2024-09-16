@@ -1,6 +1,6 @@
 ﻿namespace GrowAcc.Requests
 {
-    public class UserAccountLoginRequests
+    public class UserAccountLoginRequest
     {
         public string Email { get; set; }
         public string PhoneNumber { get; set; }

@@ -11,11 +11,11 @@ namespace GrowAcc.Models
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public bool AccountConfirmed { get; set; }
-        public DateTime ConfirmedAt { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime LastUpdatedAt { get; set; }
+        public DateTimeOffset ConfirmedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset LastUpdatedAt { get; set; }
         public bool Deleted { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTimeOffset DeletedAt { get; set; }
         public UserAccount()
         {
 
@@ -27,7 +27,7 @@ namespace GrowAcc.Models
             LastName = request.LastName;
             PhoneNumber = request.PhoneNumber;
             Password = request.Password;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTimeOffset.UtcNow;
             AccountConfirmed = false;
         }
     }

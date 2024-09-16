@@ -1,7 +1,9 @@
 ﻿using GrowAcc.BusinessFlow;
+using GrowAcc.Core;
 using GrowAcc.Database;
 using GrowAcc.Requests;
 using Microsoft.AspNetCore.Mvc;
+using CSharpFunctionalExtensions;
 
 namespace GrowAcc.Controllers
 {
@@ -25,9 +27,10 @@ namespace GrowAcc.Controllers
         public IActionResult Registration([FromBody] UserAccountRegistrationRequest request)
         {
             var result = _userService.SingUp(request);
-            if (result.IsCompleted)
+            if(result.I)
+            if (result.IsCompletedSuccessfully)
             {
-                return Ok("User was created successfully.");
+                return Ok(new Success(true,"User was created successfully. Check your email to confirm your registration.");
             }
             return BadRequest(ModelState);
         }
