@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Primitives;
+using System.Text.Json;
 
 namespace GrowAcc.Culture
 {
@@ -7,6 +8,14 @@ namespace GrowAcc.Culture
         public static bool init = false;
         public static Dictionary<string, ResponseCulture> responses { get; set; }
         
+        public static string DefineCulture(StringValues acceptedLanguages)
+        {
+            if (acceptedLanguages.Contains("en-US"))
+                return "en-US";
+            if (acceptedLanguages.Contains("ua-UA"))
+                return "ua-UA";
+            return "en_US";
+        }
         public static void TurnOn()
         {
             var filePath = "response-culture.json";
@@ -27,8 +36,8 @@ namespace GrowAcc.Culture
 
             switch (culture)
             {
-                case "ua": return value.Ua;
-                case "eng": return value.Eng;
+                case "ua-UA": return value.Ua;
+                case "en-US": return value.Eng;
                 default: return value.Eng;
             }
         }
