@@ -1,7 +1,6 @@
 using FluentValidation.AspNetCore;
 using GrowAcc.BusinessFlow;
 using GrowAcc.BusinessFlow.Smtp;
-using GrowAcc.Culture;
 using GrowAcc.Database;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -25,6 +24,15 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddScoped<IActivateUserSmtp, ActivateUserSmtp>();
 builder.Services.AddScoped<ISmtpSender, SmtpSender>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOpenOrigins",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,6 +49,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowOpenOrigins");
 
 app.MapControllers();
 
