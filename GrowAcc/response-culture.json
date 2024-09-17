@@ -1,0 +1,50 @@
+{
+  "EmailEmpty": {
+    "Ua": "Email-адреса не може бути пустою.",
+    "Eng": "Email is required."
+  },
+  "EmailInvalid": {
+    "Ua": "Формат email-адреси не правильний.",
+    "Eng": "Invalid email format."
+  },
+  "PasswordEmpty": {
+    "Ua": "Пароль не може бути пустим.",
+    "Eng": "Password can't be empty."
+  },
+  "PasswordLength": {
+    "Ua": "Обов'язкова довжина паролю 8 символів. Пароль складаєтся з великою, меленькою буквою, цифрою та спеціальним символом.",
+    "Eng": "Required password length is 8 chars."
+  },
+  "PasswordIncorrect": {
+    "Ua": "Не правильний пароль.",
+    "Eng": "Password is incorrect."
+  },
+  "PasswordConfirm": {
+    "Ua": "Пароль підтвердження не відповідає вашому паролю.",
+    "Eng": "Your password isn't equals to confirmed password."
+  },
+  "PasswordUpperChar": {
+    "Ua": "Ваш пароль немає великої літери.",
+    "Eng": "Your password doesn't have upper char."
+  },
+  "PasswordLowerChar": {
+    "Ua": "Ваш пароль немає маленької літери.",
+    "Eng": "Your password doesn't have lower char."
+  },
+  "PasswordDigit": {
+    "Ua": "Ваш пароль немає цифри.",
+    "Eng": "Your password doesn't have digits."
+  },
+  "PasswordSpecialChar": {
+    "Ua": "Ваш пароль немає спеціального знаку.",
+    "Eng": "Your password doesn't have special char."
+  },
+  "UserAccountNotFound": {
+    "Ua": "Користувача {0} не було знайдено.",
+    "Eng": "User with email {0} was not found."
+  },
+  "UserAccountRegistrate": {
+    "Ua": "Аккаунт користовача був успішно створений. Будь-ласка, перевірти вашу пошту для підтвердження регистрації.",
+    "Eng": "User account was created successfully. Check your email to confirm your registration."
+  }
+}

@@ -4,12 +4,13 @@ using GrowAcc.Requests;
 using GrowAcc.BusinessFlow.Smtp;
 using GrowAcc.Core;
 using CSharpFunctionalExtensions;
+using GrowAcc.Culture;
 
 namespace GrowAcc.BusinessFlow
 {
     public interface IUserAccountService
     {
-        Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request);
+        Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng");
     }
     public class UserAccountService : IUserAccountService
     {
@@ -26,11 +27,11 @@ namespace GrowAcc.BusinessFlow
             _validator = new UserValidator();
         }
 
-        public async Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request)
+        public async Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng")
         {
             var errors = new Dictionary<string, string>();
-            if (!_validator.IsOkay(request.Email, out errors) ||
-                !_validator.IsPasswordTrue(request.Password, request.ConfirmPassword, ref errors))
+            if (!_validator.IsOkay(request.Email, out errors, culture) ||
+                !_validator.IsPasswordTrue(request.Password, request.ConfirmPassword, culture, ref errors))
             {
                 _logger.LogWarning("Registration request for the user didn't pass validation.");
                 return Result.Failure<UserAccount, DomainValidationError>(DomainValidationError.NotValid(errors));
@@ -41,8 +42,8 @@ namespace GrowAcc.BusinessFlow
                 request.Password = _validator.ConvertPasswordForStore(request.Password);
                 currentUser = new UserAccount(request);
                 currentUser = _repository.Create(currentUser);
-                // Дописати код для різних культур, котрі використовуются користувачем. Щоб листи котрі він отримувати відповідали його мові.
-                // Дописати код, який саме механізм підтвердження буде використовуватися. Це може бути рандомно-згенерована строка або Identity структура. 
+                // Todo: Дописати код для різних культур, котрі використовуются користувачем. Щоб листи котрі він отримувати відповідали його мові.
+                // Todo: Дописати код, який саме механізм підтвердження буде використовуватися. Це може бути рандомно-згенерована строка або Identity структура. 
                 _activateUser.Send(currentUser.Email, "", "");
                 _logger.LogInformation($"User with email {currentUser.Email} has been successfully registered.");
                 return Result.Success<UserAccount, DomainError>(currentUser);
@@ -55,7 +56,8 @@ namespace GrowAcc.BusinessFlow
                 return Result.Success<UserAccount, DomainError>(currentUser);
             }
             _logger.LogWarning($"User with email {request.Email} was not found.");
-            return Result.Failure<UserAccount, DomainError>(DomainError.NotFound($"User with email {request.Email} was not found."));
+            return Result.Failure<UserAccount, DomainError>(
+                DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), request.Email)));
         }
 
         public async Task<Result<UserAccount>> Login(UserAccountLoginRequest request)

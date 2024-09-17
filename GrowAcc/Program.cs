@@ -1,6 +1,7 @@
 using FluentValidation.AspNetCore;
 using GrowAcc.BusinessFlow;
 using GrowAcc.BusinessFlow.Smtp;
+using GrowAcc.Culture;
 using GrowAcc.Database;
 using Microsoft.EntityFrameworkCore;
 using Serilog;

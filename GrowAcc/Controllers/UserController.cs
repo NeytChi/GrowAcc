@@ -5,6 +5,7 @@ using GrowAcc.Requests;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
 using GrowAcc.Models;
+using GrowAcc.Culture;
 
 namespace GrowAcc.Controllers
 {
@@ -27,10 +28,12 @@ namespace GrowAcc.Controllers
         [HttpPost]
         public async Task<IActionResult> Registration([FromBody] UserAccountRegistrationRequest request)
         {
-            var result = await _userService.Registration(request);
+            var culture = Request.Headers["Accept-Language"].ToString() ?? "eng";
+
+            var result = await _userService.Registration(request, culture);
             if(result.IsSuccess)
             {
-                return Ok(new Success(true, "User was created successfully. Check your email to confirm your registration."));
+                return Ok(new Success(true, CultureConfiguration.Get("UserAccountRegistrate", culture)));
             }
             else if (result.Error.ErrorType == ErrorType.NotValid)
             {
