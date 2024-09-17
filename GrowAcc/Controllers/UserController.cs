@@ -28,15 +28,16 @@ namespace GrowAcc.Controllers
         public async Task<IActionResult> Registration([FromBody] UserAccountRegistrationRequest request)
         {
             var result = await _userService.Registration(request);
-            if(result.IsFailure)
+            if(result.IsSuccess)
             {
-                return StatusCode(500, new Success(false, result.Error.ErrorMessage));
+                return Ok(new Success(true, "User was created successfully. Check your email to confirm your registration."));
             }
-            if (result.IsSuccess)
+            else if (result.Error.ErrorType == ErrorType.NotValid)
             {
-                return Ok(new Success(true,"User was created successfully. Check your email to confirm your registration."));
+                var output = (DomainValidationError) result.Error;
+                return StatusCode(500, new SuccessData(false, output.errors));
             }
-            return BadRequest(ModelState);
+            return StatusCode(500, new Success(false, result.Error.ErrorMessage));    
         }
     }
 }

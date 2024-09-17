@@ -4,9 +4,9 @@ namespace GrowAcc
 {
     public class UserValidator
     {
-        public bool IsOkay(string email, out List<string> errors)
+        public bool IsOkay(string email, out Dictionary<string, string> errors)
         {
-            errors = new List<string>();
+            errors = new Dictionary<string, string>();
 
             // if (string.IsNullOrWhiteSpace(user.Login))
             // {
@@ -15,32 +15,25 @@ namespace GrowAcc
 
             if (string.IsNullOrWhiteSpace(email))
             {
-                errors.Add("Email is required.");
+                errors.Add("Email", "Email is required.");
+                return false;
             }
 
             if (!IsValidEmail(email))
             {
-                errors.Add("Invalid email format.");
-            }
-
-            return errors.Count == 0;
-        }
-        public bool IsPasswordTrue(string userPassword, string confimedPassword, ref List<string> errors)
-        {
-            if (!IsValidPassword(userPassword, confimedPassword))
-            {
-                errors.Add("Password does not meet the required criteria.");
+                errors.Add("Email", "Invalid email format.");
                 return false;
             }
+
             return true;
         }
-        public bool IsPasswordStored(string userPassword, string storedHash, ref List<string> errors)
+        public bool IsPasswordStored(string userPassword, string storedHash, ref Dictionary<string, string> errors)
         {
             if (PasswordHelper.VerifyPassword(userPassword, storedHash))
             {
                 return true;
             }
-            errors.Add("Password is incorrect.");
+            errors.Add("Password", "Password is incorrect.");
             return false;
         }
         private bool IsValidEmail(string email)
@@ -55,19 +48,21 @@ namespace GrowAcc
                 return false;
             }
         }
-
-        private bool IsValidPassword(string password, string confirmedPassword)
+        public bool IsPasswordTrue(string password, string confirmedPassword, ref Dictionary<string,string> errors)
         {
+            bool hasUpperChar = false, hasLowerChar = false, hasDigit = false, hasSpecialChar = false;
+
             if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
             {
+                errors.Add("Password", "Password can't be empty.");
                 return false;
             }
             if (!password.Equals(confirmedPassword))
             {
+                errors.Add("Password", "Your password isn't equals to confirmed password.");
                 return false;
             }
-            bool hasUpperChar = false, hasLowerChar = false, hasDigit = false, hasSpecialChar = false;
-
+            
             foreach (var c in password)
             {
                 if (char.IsUpper(c)) hasUpperChar = true;
@@ -75,7 +70,22 @@ namespace GrowAcc
                 if (char.IsDigit(c)) hasDigit = true;
                 if (!char.IsLetterOrDigit(c)) hasSpecialChar = true;
             }
-
+            if (!hasUpperChar)
+            {
+                errors.Add("Password", "Your password doesn't have upper char.");
+            }
+            if (!hasLowerChar)
+            {
+                errors.Add("Password", "Your password doesn't have lower char.");
+            }    
+            if (!hasDigit)
+            {
+                errors.Add("Password", "Your password doesn't have digits.");
+            }
+            if (!hasSpecialChar)
+            {
+                errors.Add("Password", "Your password doesn't have digits.");
+            }
             return hasUpperChar && hasLowerChar && hasDigit && hasSpecialChar;
         }
         public string ConvertPasswordForStore(string password)

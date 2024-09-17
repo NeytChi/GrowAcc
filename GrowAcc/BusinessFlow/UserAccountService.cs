@@ -28,12 +28,12 @@ namespace GrowAcc.BusinessFlow
 
         public async Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request)
         {
-            var errors = new List<string>();
+            var errors = new Dictionary<string, string>();
             if (!_validator.IsOkay(request.Email, out errors) ||
                 !_validator.IsPasswordTrue(request.Password, request.ConfirmPassword, ref errors))
             {
                 _logger.LogWarning("Registration request for the user didn't pass validation.");
-                return Result.Failure<UserAccount, DomainError>(DomainError.NotValid("Registration request for the user didn't pass validation."));
+                return Result.Failure<UserAccount, DomainValidationError>(DomainValidationError.NotValid(errors));
             }
             var currentUser = _repository.Get(request.Email);
             if (currentUser == null)
