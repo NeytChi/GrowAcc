@@ -18,7 +18,7 @@ namespace GrowAcc.BusinessFlow.Smtp
         private MailAddress from;
         private SmtpClient smtp;
 
-        public SmtpSender(ILogger logger, IOptions<SmtpSettings> options)
+        public SmtpSender(ILogger<SmtpSender> logger, IOptions<SmtpSettings> options)
         {
             _logger = logger;
             OnConfigure(options.Value);

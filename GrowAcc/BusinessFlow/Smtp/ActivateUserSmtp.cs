@@ -1,6 +1,6 @@
 ﻿namespace GrowAcc.BusinessFlow.Smtp
 {
-    public class ActivateUserSmtp
+    public class ActivateUserSmtp : IActivateUserSmtp
     {
         private ISmtpSender _sender;
 

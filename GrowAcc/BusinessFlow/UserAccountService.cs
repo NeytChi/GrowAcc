@@ -9,7 +9,7 @@ namespace GrowAcc.BusinessFlow
 {
     public interface IUserAccountService
     {
-        Task<IResult<UserAccount, DomainError>> SingUp(UserAccountRegistrationRequest request);
+        Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request);
     }
     public class UserAccountService : IUserAccountService
     {
@@ -18,7 +18,7 @@ namespace GrowAcc.BusinessFlow
         private ILogger _logger { get; set; }
         private UserValidator _validator { get; set; }
 
-        public UserAccountService(IUserRepository repository, IActivateUserSmtp activateUserSmtp, ILogger logger)
+        public UserAccountService(IUserRepository repository, IActivateUserSmtp activateUserSmtp, ILogger<UserAccountService> logger)
         {
             _repository = repository;
             _activateUser = activateUserSmtp;
@@ -26,7 +26,7 @@ namespace GrowAcc.BusinessFlow
             _validator = new UserValidator();
         }
 
-        public async Task<IResult<UserAccount, DomainError>> SingUp(UserAccountRegistrationRequest request)
+        public async Task<IResult<UserAccount, DomainError>> Registration(UserAccountRegistrationRequest request)
         {
             var errors = new List<string>();
             if (!_validator.IsOkay(request.Email, out errors) ||
