@@ -1,4 +1,3 @@
-using FluentValidation.AspNetCore;
 using GrowAcc.BusinessFlow;
 using GrowAcc.BusinessFlow.Smtp;
 using GrowAcc.Database;
@@ -15,8 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Host.UseSerilog();
-builder.Services.AddControllers()
-    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Program>());
+builder.Services.AddControllers();
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpConfiguration"));
 
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();

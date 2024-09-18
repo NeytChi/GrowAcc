@@ -1,12 +1,13 @@
-﻿using CSharpFunctionalExtensions;
-using GrowAcc.BusinessFlow;
+﻿using GrowAcc.BusinessFlow;
 using GrowAcc.Culture;
-using System.Text.RegularExpressions;
+using System.Net;
 
 namespace GrowAcc
 {
     public class UserValidator
     {
+        private PasswordHelper passwordHelper = new PasswordHelper();
+
         public bool IsOkay(string email, out Dictionary<string, string> errors, string culture)
         {
             errors = new Dictionary<string, string>();
@@ -25,9 +26,9 @@ namespace GrowAcc
 
             return true;
         }
-        public bool IsPasswordStored(string userPassword, string storedHash, string culture, ref Dictionary<string, string> errors)
+        public bool IsPasswordStored(string userPassword, string storedHash, string storedSalt, string culture, ref Dictionary<string, string> errors)
         {
-            if (PasswordHelper.VerifyPassword(userPassword, storedHash))
+            if (passwordHelper.VerifyPassword(userPassword, storedSalt, storedHash))
             {
                 return true;
             }
@@ -91,9 +92,22 @@ namespace GrowAcc
             }
             return hasUpperChar && hasLowerChar && hasDigit && hasSpecialChar;
         }
-        public string ConvertPasswordForStore(string password)
+        /// <summary>
+        /// Getting a user's string password - dictionary with key 'Password' with value hashed password and key 'Salt' with value of the salt for this password.
+        /// </summary>
+        public Dictionary<string, string> GetCombinationHashPassword(string password)
         {
-            return PasswordHelper.GetPasswordForStore(password);
+            var salt = passwordHelper.GenerateSalt();
+            var hashedPassword = passwordHelper.HashPasswordWithSalt(password, salt);
+            return new Dictionary<string, string>()
+            {
+                { "Salt", salt },
+                { "Password", hashedPassword }
+            };
+        }
+        public string CreateConfirmToken()
+        {
+            return passwordHelper.GenerateToken();
         }
     }
 }

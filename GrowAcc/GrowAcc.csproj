@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="BusinessFlow\UserAccountService\" />
-    <Folder Include="Dto\" />
   </ItemGroup>
 
 </Project>

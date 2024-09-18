@@ -4,6 +4,7 @@ using GrowAcc.Database;
 using GrowAcc.Requests;
 using Microsoft.AspNetCore.Mvc;
 using GrowAcc.Culture;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrowAcc.Controllers
 {
@@ -18,11 +19,6 @@ namespace GrowAcc.Controllers
             _userService = userAccountService;
             _userRepository = repository;
         }
-        /// <summary>
-        /// Треба визначитися, яким саме чином опрацьовувати помилки при запиті та при успішному виконанні методу. В якому форматі повертати відповідь.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Registration([FromBody] UserAccountRegistrationRequest request)
         {
@@ -35,10 +31,22 @@ namespace GrowAcc.Controllers
             }
             else if (result.Error.ErrorType == ErrorType.NotValid)
             {
-                var output = (DomainValidationError) result.Error;
-                return StatusCode(500, new SuccessData(false, output.errors));
+                return StatusCode(500, new SuccessData(false, (DomainValidationError)result.Error));
             }
             return StatusCode(500, new Success(false, result.Error.ErrorMessage));    
+        }
+        [HttpGet("confirm")]
+        public async Task<IActionResult> ConfirmEmail(string token)
+        {
+            var culture = CultureConfiguration.DefineCulture(Request.Headers.AcceptLanguage);
+
+            var result = await _userService.ConfirmEmailByToken(token, culture);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new SuccessData(true, new MessageUser(CultureConfiguration.Get("UserAccountConfirmed", culture), result.Value)));
+            }
+            return StatusCode(500, new Success(false, result.Error.ErrorMessage));
         }
     }
 }

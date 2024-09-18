@@ -46,5 +46,17 @@
   "UserAccountRegistrate": {
     "Ua": "Аккаунт користовача був успішно створений. Будь-ласка, перевірти вашу пошту для підтвердження регистрації.",
     "Eng": "User account was created successfully. Check your email to confirm your registration."
+  },
+  "UserNotFoundByToken": {
+    "Ua": "Ваш аккаунт не був знайдений по цій адресі. Ваш аккаунт не активувався.",
+    "Eng": "Your account wasn't found by this URL. Your account isn't activated."
+  },
+  "UserAlreadyConfirmed": {
+    "Ua": "Ваш аккаунт вже активований.",
+    "Eng": "Your account is already active."
+  },
+  "UserAccountConfirmed": {
+    "Ua": "Ваш аккаунт активований.",
+    "Eng" : "Your account is active."
   }
 }

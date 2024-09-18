@@ -1,4 +1,5 @@
 ﻿using GrowAcc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrowAcc.Database
 {
@@ -11,8 +12,8 @@ namespace GrowAcc.Database
         }
         public UserAccount Create(UserAccount account)
         {
-            _context.UserAccounts.Add(account);
-            _context.SaveChanges();
+            _context.UserAccounts.AddAsync(account);
+            _context.SaveChangesAsync();
             return account;
         }
 
@@ -22,8 +23,9 @@ namespace GrowAcc.Database
             _context.SaveChanges();
         }
 
-        public UserAccount Get(Guid id) => _context.UserAccounts.Where(x => x.Id == id).FirstOrDefault();
-        public UserAccount Get(string email) => _context.UserAccounts.Where(x => x.Email == email).FirstOrDefault();
+        public Task<UserAccount> Get(Guid id) => _context.UserAccounts.Where(x => x.Id == id).SingleOrDefaultAsync();
+        public Task<UserAccount> Get(string email) => _context.UserAccounts.Where(x => x.Email == email).SingleOrDefaultAsync();
+        public Task<UserAccount> GetByConfirmToken(string confirmToken) => _context.UserAccounts.Where(x => x.ConfirmToken == confirmToken).SingleOrDefaultAsync();
 
         public void Update(UserAccount account)
         {

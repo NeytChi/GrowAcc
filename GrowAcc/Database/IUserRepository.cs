@@ -7,7 +7,8 @@ namespace GrowAcc.Database
         public UserAccount Create(UserAccount account);
         public void Update(UserAccount account);
         public void Delete(UserAccount account);
-        public UserAccount Get(Guid id);
-        public UserAccount Get(string email);
+        public Task<UserAccount> Get(Guid id);
+        public Task<UserAccount> GetByConfirmToken(string confirmToken);
+        public Task<UserAccount> Get(string email);
     }
 }
