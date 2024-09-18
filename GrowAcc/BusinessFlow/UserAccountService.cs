@@ -6,7 +6,6 @@ using GrowAcc.Core;
 using CSharpFunctionalExtensions;
 using GrowAcc.Culture;
 using GrowAcc.Responses;
-using Microsoft.AspNetCore.Identity;
 
 namespace GrowAcc.BusinessFlow
 {
@@ -17,7 +16,6 @@ namespace GrowAcc.BusinessFlow
     }
     public class UserAccountService : IUserAccountService
     {
-        private readonly UserManager<UserAccount> _userManager;
         private IUserRepository _repository;
         private IActivateUserSmtp _activateUser;
         private ILogger _logger;
@@ -25,10 +23,8 @@ namespace GrowAcc.BusinessFlow
 
         public UserAccountService(IUserRepository repository, 
             IActivateUserSmtp activateUserSmtp, 
-            ILogger<UserAccountService> logger, 
-            UserManager<UserAccount> userManager)
+            ILogger<UserAccountService> logger)
         {
-            _userManager = userManager;
             _repository = repository;
             _activateUser = activateUserSmtp;
             _logger = logger;
