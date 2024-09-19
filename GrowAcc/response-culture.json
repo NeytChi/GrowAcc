@@ -41,7 +41,7 @@
   },
   "UserAccountNotFound": {
     "Ua": "Користувача {0} не було знайдено.",
-    "Eng": "User with email {0} was not found."
+    "Eng": "The user account with email {0} was not found."
   },
   "UserAccountRegistrate": {
     "Ua": "Аккаунт користовача був успішно створений. Будь-ласка, перевірти вашу пошту для підтвердження регистрації.",
@@ -59,8 +59,12 @@
     "Ua": "Ваш аккаунт активований.",
     "Eng": "Your account is active."
   },
-  "UserTryToRegisterActiveAccount" : {
+  "UserTryToRegisterActiveAccount": {
     "Ua": "Аккаунт за такою поштою вже зареєстрований.",
     "Eng": "Account with this email address is already registered."
+  },
+  "UserTryToLoginNonActiveAccount": {
+    "Ua": "Аккаунт з адресою електронної пошти {0} наразі не підтверджений. Щоб підтвердити реєстрацію, будь ласка, перевірте вашу пошту та перейдіть за посиланням у листі. Або натисніть кнопку «Відправити лист повторно».",
+    "Eng": "The account with the email address {0} has not been confirmed yet. To confirm your registration, please check your email and follow the link in the message. Alternatively, click the 'Resend Email' button"
   }
 }

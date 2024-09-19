@@ -13,11 +13,9 @@ namespace GrowAcc.Controllers
     public class UserController : ControllerBase
     {
         private IUserAccountService _userService;
-        private readonly IUserRepository _userRepository;
-        public UserController(IUserAccountService userAccountService, IUserRepository repository) 
+        public UserController(IUserAccountService userAccountService) 
         {
             _userService = userAccountService;
-            _userRepository = repository;
         }
         [HttpPost("registration")]
         public async Task<IActionResult> Registration([FromBody] UserAccountRegistrationRequest request)
@@ -48,6 +46,18 @@ namespace GrowAcc.Controllers
             }
             return StatusCode(500, new Success(false, result.Error.ErrorMessage));
         }
-        
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserAccountLoginRequest request)
+        {
+            var culture = CultureConfiguration.DefineCulture(Request.Headers.AcceptLanguage);
+
+            var result = await _userService.Login(request, culture);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new SuccessData(true, result.Value));
+            }
+            return StatusCode(500, new Success(false, result.Error.ErrorMessage));
+        }
     }
 }

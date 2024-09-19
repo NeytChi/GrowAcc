@@ -26,14 +26,9 @@ namespace GrowAcc
 
             return true;
         }
-        public bool IsPasswordStored(string userPassword, string storedHash, string storedSalt, string culture, ref Dictionary<string, string> errors)
+        public bool CheckPassword(string userPassword, string storedHash, string storedSalt)
         {
-            if (passwordHelper.VerifyPassword(userPassword, storedSalt, storedHash))
-            {
-                return true;
-            }
-            errors.Add("Password", CultureConfiguration.Get("PasswordIncorrect", culture));
-            return false;
+            return passwordHelper.VerifyPassword(userPassword, storedHash, storedSalt);
         }
         private bool IsValidEmail(string email)
         {

@@ -13,6 +13,7 @@ namespace GrowAcc.BusinessFlow
     {
         Task<IResult<UserAccountResponse, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng");
         Task<IResult<UserAccountResponse, DomainError>> ConfirmEmailByToken(string token, string culture);
+        Task<IResult<UserAccountResponse, DomainError>> Login(UserAccountLoginRequest request, string culture);
     }
     public class UserAccountService : IUserAccountService
     {
@@ -91,6 +92,31 @@ namespace GrowAcc.BusinessFlow
             user.ConfirmToken = null;
             _repository.Update(user);
             _logger.LogInformation($"The user with email {user.Email} has been successfully confirmed.");
+            return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(user));
+        }
+        public async Task<IResult<UserAccountResponse, DomainError>> Login(UserAccountLoginRequest request, string culture)
+        {
+            var user = await _repository.Get(request.Email);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"The user with email {request.Email} wasn't found.");
+                return Result.Failure<UserAccountResponse, DomainError>(
+                    DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), request.Email)));
+            }
+            if (!user.AccountConfirmed)
+            {
+                _logger.LogWarning($"The user with email {user.Email} attempted to log in, but their account is not activated.");
+                return Result.Failure<UserAccountResponse, DomainError>(
+                    DomainError.Conflict(string.Format(CultureConfiguration.Get("UserTryToLoginNonActiveAccount", culture), request.Email)));
+            }
+            if (!_validator.CheckPassword(request.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                _logger.LogWarning($"The user with email '{user.Email}' attempted to log in, but the password is incorrect.");
+                return Result.Failure<UserAccountResponse, DomainError>(
+                    DomainError.Conflict(CultureConfiguration.Get("PasswordIncorrect", culture)));
+            }
+            _logger.LogInformation($"The user with email {user.Email} has logged in successfully.");
             return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(user));
         }
     }
