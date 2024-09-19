@@ -61,7 +61,7 @@ namespace GrowAcc.BusinessFlow.Smtp
             {
                 _logger.LogInformation("Sending message to " + email);
                 if (emailEnable)
-                    smtp.SendMailAsync(message);
+                    smtp.Send(message);
                 _logger.LogInformation("Message sent to " + email);
             }
             catch (Exception e)

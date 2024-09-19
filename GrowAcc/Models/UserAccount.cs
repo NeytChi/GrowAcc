@@ -11,7 +11,7 @@ namespace GrowAcc.Models
         public string PasswordHash { get; set; }
         public string PasswordSalt { get; set; }
         public string PhoneNumber { get; set; }
-        public string ConfirmToken { get; set; }
+        public string? ConfirmToken { get; set; }
         public bool AccountConfirmed { get; set; }
         public DateTimeOffset ConfirmedAt { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

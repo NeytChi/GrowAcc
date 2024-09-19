@@ -19,7 +19,7 @@ namespace GrowAcc.Controllers
             _userService = userAccountService;
             _userRepository = repository;
         }
-        [HttpPost]
+        [HttpPost("registration")]
         public async Task<IActionResult> Registration([FromBody] UserAccountRegistrationRequest request)
         {
             var culture = CultureConfiguration.DefineCulture(Request.Headers.AcceptLanguage);
@@ -48,5 +48,6 @@ namespace GrowAcc.Controllers
             }
             return StatusCode(500, new Success(false, result.Error.ErrorMessage));
         }
+        
     }
 }

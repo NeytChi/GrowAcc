@@ -57,6 +57,10 @@
   },
   "UserAccountConfirmed": {
     "Ua": "Ваш аккаунт активований.",
-    "Eng" : "Your account is active."
+    "Eng": "Your account is active."
+  },
+  "UserTryToRegisterActiveAccount" : {
+    "Ua": "Аккаунт за такою поштою вже зареєстрований.",
+    "Eng": "Account with this email address is already registered."
   }
 }

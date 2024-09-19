@@ -1,6 +1,28 @@
 @GrowAcc_HostAddress = http://localhost:5144
 
+### Test request
 GET {{GrowAcc_HostAddress}}/weatherforecast/
 Accept: application/json
+
+### Registration for user
+POST {{GrowAcc_HostAddress}}/User/registration/
+Content-Type: application/json
+Accept-Language: ua-UA
+
+
+{
+  "email" : "neyton61@gmail.com",
+  "phoneNumber" : "+380671296329",
+  "firstName" : "Mykyta",
+  "lastName" : "Chystyi",
+  "password" : "Pass1234!",
+  "confirmPassword" : "Pass1234!"
+}
+
+### Confirm user account registration
+GET {{GrowAcc_HOstAddress}}/User/confirm?token=391419d5-e24d-4435-a043-e4b1f00a4271
+Accept: application/json
+Accept-Language: ua-UA
+
 
 ###

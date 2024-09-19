@@ -16,6 +16,7 @@ namespace GrowAcc.BusinessFlow
     }
     public class UserAccountService : IUserAccountService
     {
+        private readonly IHttpContextAccessor _http;
         private IUserRepository _repository;
         private IActivateUserSmtp _activateUser;
         private ILogger _logger;
@@ -23,11 +24,13 @@ namespace GrowAcc.BusinessFlow
 
         public UserAccountService(IUserRepository repository, 
             IActivateUserSmtp activateUserSmtp, 
-            ILogger<UserAccountService> logger)
+            ILogger<UserAccountService> logger,
+            IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _activateUser = activateUserSmtp;
             _logger = logger;
+            _http = httpContextAccessor;
         }
 
         public async Task<IResult<UserAccountResponse, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng")
@@ -46,8 +49,8 @@ namespace GrowAcc.BusinessFlow
                 var confirmToken = _validator.CreateConfirmToken();
                 var newUser = new UserAccount(request, passwordKeys["Password"], passwordKeys["Salt"], confirmToken);
                 newUser = _repository.Create(newUser);
-                // TODO: Визначити адресу серверу для відправки на пошту запиту на підтвердження аккаунту.
-                _activateUser.Send(newUser.Email, $"http://localhost:8080/user/confirm?token={confirmToken}", culture);
+                _activateUser.Send(newUser.Email, 
+                    $"{_http.HttpContext.Request.Scheme}://{_http.HttpContext.Request.Host}/User/confirm?token={confirmToken}", culture);
                 _logger.LogInformation($"User with email {newUser.Email} has been successfully registered.");
                 return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(newUser));
             }
@@ -58,9 +61,9 @@ namespace GrowAcc.BusinessFlow
                 _logger.LogInformation($"User with email {currentUser.Email} has been successfully restored.");
                 return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(currentUser));
             }
-            _logger.LogWarning($"User with email {request.Email} was not found.");
+            _logger.LogWarning($"User is trying to register an already registered account.");
             return Result.Failure<UserAccountResponse, DomainError>(
-                DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), request.Email)));
+                DomainError.Conflict(string.Format(CultureConfiguration.Get("UserTryToRegisterActiveAccount", culture), request.Email)));
         }
 
         public async Task<Result<UserAccount>> Login(UserAccountLoginRequest request)

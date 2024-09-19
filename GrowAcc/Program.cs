@@ -2,7 +2,9 @@ using GrowAcc.BusinessFlow;
 using GrowAcc.BusinessFlow.Smtp;
 using GrowAcc.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Reflection;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -19,9 +21,10 @@ builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpC
 
 builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IActivateUserSmtp, ActivateUserSmtp>();
 builder.Services.AddScoped<ISmtpSender, SmtpSender>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOpenOrigins",
@@ -39,7 +42,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
+{ 
     app.UseSwagger();
     app.UseSwaggerUI();
 }
