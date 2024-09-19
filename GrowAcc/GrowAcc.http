@@ -20,9 +20,18 @@ Accept-Language: ua-UA
 }
 
 ### Confirm user account registration
-GET {{GrowAcc_HOstAddress}}/User/confirm?token=391419d5-e24d-4435-a043-e4b1f00a4271
+GET {{GrowAcc_HostAddress}}/User/confirm?token=f1c370e2-674a-44af-a300-1def7cb3fb30
 Accept: application/json
 Accept-Language: ua-UA
 
 
-###
+### Login for user account
+POST {{GrowAcc_HostAddress}}/user/login
+Content-Type: application/json
+Accept-Language: ua-UA
+
+
+{
+  "email" : "neyton61@gmail.com",
+  "password" : "Pass1234!"
+}

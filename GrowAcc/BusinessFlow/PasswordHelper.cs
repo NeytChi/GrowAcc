@@ -8,7 +8,7 @@ namespace GrowAcc.BusinessFlow
         public string GenerateSalt(int length = 16)
         {
             var saltBytes = new byte[length];
-            using (var rng = new RNGCryptoServiceProvider())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(saltBytes);
             }
@@ -24,7 +24,7 @@ namespace GrowAcc.BusinessFlow
                 return Convert.ToBase64String(hashBytes);
             }
         }
-        public bool VerifyPassword(string password, string salt, string hashedPassword)
+        public bool VerifyPassword(string password, string hashedPassword, string salt)
         {
             var hashedInputPassword = HashPasswordWithSalt(password, salt);
             return hashedInputPassword == hashedPassword;
