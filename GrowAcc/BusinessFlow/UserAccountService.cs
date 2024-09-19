@@ -6,6 +6,7 @@ using GrowAcc.Core;
 using CSharpFunctionalExtensions;
 using GrowAcc.Culture;
 using GrowAcc.Responses;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GrowAcc.BusinessFlow
 {
@@ -15,6 +16,11 @@ namespace GrowAcc.BusinessFlow
         Task<IResult<UserAccountResponse, DomainError>> ConfirmEmailByToken(string token, string culture);
         Task<IResult<UserAccountResponse, DomainError>> Login(UserAccountLoginRequest request, string culture);
         Task<IResult<bool, DomainError>> ResendConfirmationEmail(string email, string culture);
+        Task<IResult<bool, DomainError>> ChangePassword(string email, string culture);
+        Task<IResult<bool, DomainError>> DeleteAccount(DeleteUserAccountRequest request, string culture);
+        Task<IResult<bool, DomainError>> LogOut();
+        Task<IResult<UserAccountResponse, DomainError>> SignUpByGoogle();
+        Task<IResult<UserAccountResponse, DomainError>> SingInBYGoogle();
     }
     public class UserAccountService : IUserAccountService
     {
