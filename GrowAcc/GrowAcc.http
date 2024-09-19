@@ -20,10 +20,14 @@ Accept-Language: ua-UA
 }
 
 ### Confirm user account registration
-GET {{GrowAcc_HostAddress}}/User/confirm?token=f1c370e2-674a-44af-a300-1def7cb3fb30
+GET {{GrowAcc_HostAddress}}/User/confirm?token=abcc69e8-223e-477b-862e-dd3a0d89b523
 Accept: application/json
 Accept-Language: ua-UA
 
+### Send registration message again
+GET {{GrowAcc_HostAddress}}/User/resendConfirmationEmail?email=neyton61@gmail.com
+Accept: application/json
+Accept-Language: ua-UA
 
 ### Login for user account
 POST {{GrowAcc_HostAddress}}/user/login

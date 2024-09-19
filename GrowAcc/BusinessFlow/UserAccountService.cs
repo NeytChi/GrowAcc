@@ -14,6 +14,7 @@ namespace GrowAcc.BusinessFlow
         Task<IResult<UserAccountResponse, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng");
         Task<IResult<UserAccountResponse, DomainError>> ConfirmEmailByToken(string token, string culture);
         Task<IResult<UserAccountResponse, DomainError>> Login(UserAccountLoginRequest request, string culture);
+        Task<IResult<bool, DomainError>> ResendConfirmationEmail(string email, string culture);
     }
     public class UserAccountService : IUserAccountService
     {
@@ -66,16 +67,10 @@ namespace GrowAcc.BusinessFlow
             return Result.Failure<UserAccountResponse, DomainError>(
                 DomainError.Conflict(string.Format(CultureConfiguration.Get("UserTryToRegisterActiveAccount", culture), request.Email)));
         }
-
-        public async Task<Result<UserAccount>> Login(UserAccountLoginRequest request)
-        {
-
-            return new Result<UserAccount>();
-        }
         public async Task<IResult<UserAccountResponse, DomainError>> ConfirmEmailByToken(string token, string culture)
         {
             var user = await _repository.GetByConfirmToken(token); 
-            if (user == null)
+            if (user == null || user.Deleted)
             {
                 _logger.LogWarning($"User account wasn't found by this {token} token.");
                 return Result.Failure<UserAccountResponse, DomainError>(
@@ -98,9 +93,9 @@ namespace GrowAcc.BusinessFlow
         {
             var user = await _repository.Get(request.Email);
 
-            if (user == null)
+            if (user == null || user.Deleted)
             {
-                _logger.LogWarning($"The user with email {request.Email} wasn't found.");
+                _logger.LogWarning($"The user with email {request.Email} attepted to log in, but he wasn't found.");
                 return Result.Failure<UserAccountResponse, DomainError>(
                     DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), request.Email)));
             }
@@ -118,6 +113,28 @@ namespace GrowAcc.BusinessFlow
             }
             _logger.LogInformation($"The user with email {user.Email} has logged in successfully.");
             return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(user));
+        }
+        public async Task<IResult<bool, DomainError>> ResendConfirmationEmail(string email, string culture)
+        {
+            var user = await _repository.Get(email);
+
+            if (user == null || user.Deleted)
+            {
+                _logger.LogWarning($"The user with email {email} attempted to resend confirmation email, but he wasn't found.");
+                return Result.Failure<bool, DomainError>(
+                    DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), email)));
+            }
+            if (user.AccountConfirmed)
+            {
+                _logger.LogWarning($"The user with email '{email}' attempted to resend the confirmation email, but their account is already activated.");
+                return Result.Failure<bool, DomainError>(
+                    DomainError.Conflict(string.Format(CultureConfiguration.Get("UserTryResendConfirmEmail", culture), email)));
+            }
+
+            _activateUser.Send(email,
+                $"{_http.HttpContext.Request.Scheme}://{_http.HttpContext.Request.Host}/User/confirm/?token={user.ConfirmToken}", culture);
+            _logger.LogInformation($"The confirmation email was successfully resent to the user with email {email}.");
+            return Result.Success<bool, DomainError>(true);
         }
     }
 }

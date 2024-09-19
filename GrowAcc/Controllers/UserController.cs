@@ -46,6 +46,19 @@ namespace GrowAcc.Controllers
             }
             return StatusCode(500, new Success(false, result.Error.ErrorMessage));
         }
+        [HttpGet("resendConfirmationEmail")]
+        public async Task<IActionResult> ResendConfirmationEmail(string email)
+        {
+            var culture = CultureConfiguration.DefineCulture(Request.Headers.AcceptLanguage);
+
+            var result = await _userService.ResendConfirmationEmail(email, culture);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new Success(true, CultureConfiguration.Get("ResendConfirmEmailSuccess", culture)));
+            }
+            return StatusCode(500, new Success(false, result.Error.ErrorMessage));
+        }
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserAccountLoginRequest request)
         {

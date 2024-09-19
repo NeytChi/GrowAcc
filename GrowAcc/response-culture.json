@@ -66,5 +66,13 @@
   "UserTryToLoginNonActiveAccount": {
     "Ua": "Аккаунт з адресою електронної пошти {0} наразі не підтверджений. Щоб підтвердити реєстрацію, будь ласка, перевірте вашу пошту та перейдіть за посиланням у листі. Або натисніть кнопку «Відправити лист повторно».",
     "Eng": "The account with the email address {0} has not been confirmed yet. To confirm your registration, please check your email and follow the link in the message. Alternatively, click the 'Resend Email' button"
+  },
+  "UserTryResendConfirmEmail": {
+    "Ua": "Користувач з email адресою {0} намагається відправити повторно лист для підтвердження аккаунту, але його аккаунт вже активовано.",
+    "Eng": "The user with email {0} attempted to resend the confirmation email, but their account is already activated."
+  },
+  "ResendConfirmEmailSuccess": {
+    "Ua": "Лист з посиланням для підтвердження реєстрації вашого аккаунту був успішно відправлений.",
+    "Eng": "The email with the confirmation link for your account registration has been successfully sent."
   }
 }
