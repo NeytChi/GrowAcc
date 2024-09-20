@@ -158,17 +158,6 @@ namespace GrowAcc.BusinessFlow
             _logger.LogInformation($"The password for the user with email address {email} has been changed.");
             return Result.Success<bool, DomainError>(true);
         }
-
-        public Task<IResult<bool, DomainError>> DeleteAccount(DeleteUserAccountRequest request, string culture)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IResult<bool, DomainError>> LogOut()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IResult<UserAccountResponse, DomainError>> SignUpByGoogle()
         {
             throw new NotImplementedException();
