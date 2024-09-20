@@ -6,7 +6,7 @@ using GrowAcc.Core;
 using CSharpFunctionalExtensions;
 using GrowAcc.Culture;
 using GrowAcc.Responses;
-using Microsoft.EntityFrameworkCore.Storage;
+using Azure.Core;
 
 namespace GrowAcc.BusinessFlow
 {
@@ -20,11 +20,10 @@ namespace GrowAcc.BusinessFlow
         Task<IResult<bool, DomainError>> DeleteAccount(DeleteUserAccountRequest request, string culture);
         Task<IResult<bool, DomainError>> LogOut();
         Task<IResult<UserAccountResponse, DomainError>> SignUpByGoogle();
-        Task<IResult<UserAccountResponse, DomainError>> SingInBYGoogle();
+        Task<IResult<UserAccountResponse, DomainError>> SingInByGoogle();
     }
     public class UserAccountService : IUserAccountService
     {
-        private readonly IHttpContextAccessor _http;
         private IUserRepository _repository;
         private IActivateUserSmtp _activateUser;
         private ILogger _logger;
@@ -32,13 +31,12 @@ namespace GrowAcc.BusinessFlow
 
         public UserAccountService(IUserRepository repository, 
             IActivateUserSmtp activateUserSmtp, 
-            ILogger<UserAccountService> logger,
-            IHttpContextAccessor httpContextAccessor)
+            ILogger<UserAccountService> logger)
         {
             _repository = repository;
             _activateUser = activateUserSmtp;
             _logger = logger;
-            _http = httpContextAccessor;
+            
         }
 
         public async Task<IResult<UserAccountResponse, DomainError>> Registration(UserAccountRegistrationRequest request, string culture = "eng")
@@ -57,8 +55,7 @@ namespace GrowAcc.BusinessFlow
                 var confirmToken = _validator.CreateConfirmToken();
                 var newUser = new UserAccount(request, passwordKeys["Password"], passwordKeys["Salt"], confirmToken);
                 newUser = _repository.Create(newUser);
-                _activateUser.Send(newUser.Email, 
-                    $"{_http.HttpContext.Request.Scheme}://{_http.HttpContext.Request.Host}/User/confirm?token={confirmToken}", culture);
+                _activateUser.ConfirmUserAccount(newUser.Email, confirmToken, culture);
                 _logger.LogInformation($"User with email {newUser.Email} has been successfully registered.");
                 return Result.Success<UserAccountResponse, DomainError>(new UserAccountResponse(newUser));
             }
@@ -137,10 +134,49 @@ namespace GrowAcc.BusinessFlow
                     DomainError.Conflict(string.Format(CultureConfiguration.Get("UserTryResendConfirmEmail", culture), email)));
             }
 
-            _activateUser.Send(email,
-                $"{_http.HttpContext.Request.Scheme}://{_http.HttpContext.Request.Host}/User/confirm/?token={user.ConfirmToken}", culture);
+            _activateUser.ConfirmUserAccount(email, user.ConfirmToken, culture);
             _logger.LogInformation($"The confirmation email was successfully resent to the user with email {email}.");
             return Result.Success<bool, DomainError>(true);
+        }
+
+        public async Task<IResult<bool, DomainError>> ChangePassword(string email, string culture)
+        {
+            var user = await _repository.Get(email);
+
+            if (user == null || user.Deleted || !user.AccountConfirmed)
+            {
+                _logger.LogWarning($"The user with email {email} attempted to change password, but he wasn't found.");
+                return Result.Failure<bool, DomainError>(
+                    DomainError.NotFound(string.Format(CultureConfiguration.Get("UserAccountNotFound", culture), email)));
+            }
+            var newPassword = _validator.CreateNewPassword();
+            var passwordKeys = _validator.GetCombinationHashPassword(newPassword);
+            user.PasswordHash = passwordKeys["Password"];
+            user.PasswordSalt = passwordKeys["Salt"];
+            _repository.Update(user);
+            _activateUser.ChangePassword(email, newPassword, culture);
+            _logger.LogInformation($"The password for the user with email address {email} has been changed.");
+            return Result.Success<bool, DomainError>(true);
+        }
+
+        public Task<IResult<bool, DomainError>> DeleteAccount(DeleteUserAccountRequest request, string culture)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IResult<bool, DomainError>> LogOut()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IResult<UserAccountResponse, DomainError>> SignUpByGoogle()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IResult<UserAccountResponse, DomainError>> SingInByGoogle()
+        {
+            throw new NotImplementedException();
         }
     }
 }

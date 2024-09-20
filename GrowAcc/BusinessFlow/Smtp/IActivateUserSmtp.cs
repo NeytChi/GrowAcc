@@ -2,6 +2,7 @@
 {
     public interface IActivateUserSmtp
     {
-        void Send(string email, string token, string culture);
+        void ConfirmUserAccount(string email, string token, string culture);
+        void ChangePassword(string email, string newPassword, string culture);
     }
 }

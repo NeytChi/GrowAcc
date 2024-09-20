@@ -42,7 +42,7 @@ namespace GrowAcc
                 return false;
             }
         }
-        public bool IsPasswordTrue(string password, string confirmedPassword, string culture, ref Dictionary<string,string> errors)
+        public bool IsPasswordTrue(string password, string confirmedPassword, string culture, ref Dictionary<string, string> errors)
         {
             bool hasUpperChar = false, hasLowerChar = false, hasDigit = false, hasSpecialChar = false;
 
@@ -61,7 +61,7 @@ namespace GrowAcc
                 errors.Add("Password", CultureConfiguration.Get("PasswordConfirm", culture));
                 return false;
             }
-            
+
             foreach (var c in password)
             {
                 if (char.IsUpper(c)) hasUpperChar = true;
@@ -76,7 +76,7 @@ namespace GrowAcc
             if (!hasLowerChar)
             {
                 errors.Add("Password", CultureConfiguration.Get("PasswordLowerChar", culture));
-            }    
+            }
             if (!hasDigit)
             {
                 errors.Add("Password", CultureConfiguration.Get("PasswordDigitChar", culture));
@@ -103,6 +103,10 @@ namespace GrowAcc
         public string CreateConfirmToken()
         {
             return passwordHelper.GenerateToken();
+        }
+        public string CreateNewPassword()
+        {
+            return passwordHelper.GenerateNewPassword();
         }
     }
 }

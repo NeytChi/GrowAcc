@@ -74,5 +74,25 @@
   "ResendConfirmEmailSuccess": {
     "Ua": "Лист з посиланням для підтвердження реєстрації вашого аккаунту був успішно відправлений.",
     "Eng": "The email with the confirmation link for your account registration has been successfully sent."
+  },
+  "ChangePasswordSuccess": {
+    "Ua": "Ваш пароль успішно змінено. Для підтвердження перевірте свою електронну пошту.",
+    "Eng": "Your password has been successfully changed. Please check your email for confirmation."
+  },
+  "ConfirmUserAccountSubject": {
+    "Ua": "Підтвердження реєстрації",
+    "Eng": "Registration Confirmation"
+  },
+  "ChangePasswordSubject": {
+    "Ua": "Новий пароль",
+    "Eng": "New password"
+  },
+  "ConfirmUserAccountEmail": {
+    "Ua": "Посилання для активації вашого аккаунту - {0}://{1}/User/confirm?token={2}",
+    "Eng": "Activation link for your account - {0}://{1]}/User/confirm?token={2}"
+  },
+  "ChangePasswordEmail": {
+    "Ua": "Ваш новий пароль - {0}",
+    "Eng" : "Your new password - {0}"
   }
 }

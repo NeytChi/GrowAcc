@@ -1,9 +1,5 @@
 @GrowAcc_HostAddress = http://localhost:5144
 
-### Test request
-GET {{GrowAcc_HostAddress}}/weatherforecast/
-Accept: application/json
-
 ### Registration for user
 POST {{GrowAcc_HostAddress}}/User/registration/
 Content-Type: application/json
@@ -39,3 +35,14 @@ Accept-Language: ua-UA
   "email" : "neyton61@gmail.com",
   "password" : "Pass1234!"
 }
+
+### Change password for user
+POST {{GrowAcc_HostAddress}}/user/changePassword
+Content-Type: application/json
+Accept-Language: ua-UA
+
+{
+  "email" : "neyton61@gmail.com"
+}
+
+### 

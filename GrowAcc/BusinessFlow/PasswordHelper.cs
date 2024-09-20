@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Security.Cryptography;
+using System;
 
 namespace GrowAcc.BusinessFlow
 {
@@ -32,6 +33,14 @@ namespace GrowAcc.BusinessFlow
         public string GenerateToken()
         {
             return Guid.NewGuid().ToString();
+        }
+        public string GenerateNewPassword(int length = 10)
+        {
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?{}[]|";
+            return new string(Enumerable.Repeat(chars, length)
+                                        .Select(s => s[random.Next(s.Length)])
+                                        .ToArray());
         }
     }
 }

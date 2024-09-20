@@ -4,7 +4,6 @@ using GrowAcc.Database;
 using GrowAcc.Requests;
 using Microsoft.AspNetCore.Mvc;
 using GrowAcc.Culture;
-using Microsoft.EntityFrameworkCore;
 
 namespace GrowAcc.Controllers
 {
@@ -69,6 +68,19 @@ namespace GrowAcc.Controllers
             if (result.IsSuccess)
             {
                 return Ok(new SuccessData(true, result.Value));
+            }
+            return StatusCode(500, new Success(false, result.Error.ErrorMessage));
+        }
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var culture = CultureConfiguration.DefineCulture(Request.Headers.AcceptLanguage);
+
+            var result = await _userService.ChangePassword(request.Email, culture);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new Success(true, CultureConfiguration.Get("ChangePasswordSuccess", culture)));
             }
             return StatusCode(500, new Success(false, result.Error.ErrorMessage));
         }
